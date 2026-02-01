@@ -85,12 +85,12 @@ const AuthScreen = ({ onLogin }) => {
         
         <form onSubmit={handleAuth} className="space-y-4">
           {!isLogin && (
-            <input type="text" placeholder="Họ và tên" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-emerald-400"
+            <input type="text" placeholder="Họ và tên" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-emerald-400"
               value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
           )}
-          <input type="text" placeholder="Tên đăng nhập" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-emerald-400"
+          <input type="text" placeholder="Tên đăng nhập" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-emerald-400"
             value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} />
-          <input type="password" placeholder="Mật khẩu" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-emerald-400"
+          <input type="password" placeholder="Mật khẩu" className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-emerald-400"
             value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
 
           {error && <div className="text-red-300 text-xs text-center font-medium bg-red-900/20 p-2 rounded">{error}</div>}
@@ -175,7 +175,6 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
   const generateAIResponse = (query) => {
     const lowerQuery = query.toLowerCase();
     
-    // Logic phân tích đơn giản (Rule-based AI)
     if (lowerQuery.includes('tổng chi') || lowerQuery.includes('tiêu hết bao nhiêu')) {
       return `Tổng chi tiêu hiện tại của bạn là ${formatCurrency(totalExpense, false)}.`;
     }
@@ -190,7 +189,6 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
       return `Bạn đang thâm hụt ${formatCurrency(Math.abs(balance), false)}. Hãy cẩn thận nhé!`;
     }
 
-    // Phân tích theo danh mục
     const categories = [...CATEGORIES.expense, ...CATEGORIES.income];
     for (const cat of categories) {
       if (lowerQuery.includes(cat.name.toLowerCase())) {
@@ -219,7 +217,6 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
     setInput('');
     setIsTyping(true);
 
-    // Giả lập thời gian suy nghĩ của AI
     setTimeout(() => {
       const responseText = generateAIResponse(userMsg.text);
       const aiMsg = { id: Date.now() + 1, sender: 'ai', text: responseText };
@@ -233,11 +230,12 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white dark:bg-gray-900 w-full max-w-md h-[80vh] sm:h-[600px] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 duration-300">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in">
+      {/* SỬA LỖI UI: items-center thay vì items-end để tránh bàn phím che mất */}
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md h-[600px] max-h-[90vh] rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header Chat */}
-        <div className="bg-teal-600 p-4 flex justify-between items-center text-white">
+        <div className="bg-teal-600 p-4 flex justify-between items-center text-white shrink-0">
           <div className="flex items-center gap-2">
             <div className="bg-white/20 p-2 rounded-full">
               <Bot size={24} />
@@ -259,7 +257,7 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
               <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${
                 msg.sender === 'user' 
                   ? 'bg-teal-600 text-white rounded-tr-none' 
-                  : 'bg-white dark:bg-gray-700 dark:text-white text-gray-800 border border-gray-200 dark:border-gray-600 rounded-tl-none shadow-sm'
+                  : 'bg-white dark:bg-gray-700 dark:text-white text-gray-900 border border-gray-200 dark:border-gray-600 rounded-tl-none shadow-sm'
               }`}>
                 {msg.text}
               </div>
@@ -278,14 +276,15 @@ const AIChatBox = ({ onClose, transactions, totalExpense, totalIncome }) => {
         </div>
 
         {/* Input Area */}
-        <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 flex gap-2">
+        <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 flex gap-2 shrink-0">
           <input 
             type="text" 
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Hỏi gì đó..." 
-            className="flex-1 bg-gray-100 dark:bg-gray-800 border-none rounded-full px-4 py-2 focus:ring-2 focus:ring-teal-500 outline-none dark:text-white"
+            // SỬA LỖI MÀU CHỮ: Thêm text-gray-900 và dark:text-white
+            className="flex-1 bg-gray-100 dark:bg-gray-800 border-none rounded-full px-4 py-2 focus:ring-2 focus:ring-teal-500 outline-none text-gray-900 dark:text-white placeholder-gray-400"
           />
           <button 
             onClick={handleSend}
@@ -305,15 +304,13 @@ const App = () => {
   // 1. KHỞI TẠO STATE
   const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem('fin_current_user')));
   const [transactions, setTransactions] = useState([]);
-  
-  // FIX QUAN TRỌNG: Cờ hiệu để biết dữ liệu đã tải xong chưa
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const [darkMode, setDarkMode] = useState(false);
   const [privateMode, setPrivateMode] = useState(false);
   const [view, setView] = useState('home');
   const [showModal, setShowModal] = useState(false);
-  const [showChat, setShowChat] = useState(false); // State cho Chatbox
+  const [showChat, setShowChat] = useState(false);
   
   // Form State
   const [modalType, setModalType] = useState('expense');
@@ -321,7 +318,7 @@ const App = () => {
   const [category, setCategory] = useState('food'); 
   const [note, setNote] = useState('');
 
-  // 2. LOGIC LƯU TRỮ AN TOÀN (FIXED)
+  // 2. LOGIC LƯU TRỮ AN TOÀN
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem('fin_current_user', JSON.stringify(currentUser));
@@ -596,10 +593,11 @@ const App = () => {
           <button onClick={() => setView('stats')} className={`flex flex-col items-center gap-1 ${view === 'stats' ? 'text-teal-600' : 'text-gray-400 dark:text-gray-600'}`}><PieChart size={24} strokeWidth={view === 'stats' ? 2.5 : 2} /></button>
         </div>
 
-        {/* === ADD MODAL === */}
+        {/* === ADD MODAL (Đã sửa lỗi bàn phím) === */}
         {showModal && (
-          <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10 duration-300 dark:text-white">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            {/* Thay items-end thành items-center ở cha, và margin auto ở con để canh giữa */}
+            <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl sm:rounded-3xl p-6 shadow-2xl animate-in zoom-in-95 duration-300 dark:text-white mx-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Thêm giao dịch</h2>
                 <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">Đóng</button>
@@ -609,7 +607,15 @@ const App = () => {
                 <button className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${modalType === 'income' ? 'bg-white dark:bg-gray-700 text-emerald-600 shadow-sm' : 'text-gray-500'}`} onClick={() => { setModalType('income'); setCategory('salary'); }}>Thu nhập</button>
               </div>
               <div className="mb-6 relative">
-                 <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0" className="w-full text-4xl font-bold bg-transparent border-b-2 border-gray-200 dark:border-gray-700 focus:border-teal-500 outline-none py-2 text-center text-gray-800 dark:text-white" autoFocus />
+                {/* SỬA LỖI MÀU CHỮ: Thêm text-gray-900 dark:text-white */}
+                 <input 
+                  type="number" 
+                  value={amount} 
+                  onChange={(e) => setAmount(e.target.value)} 
+                  placeholder="0" 
+                  className="w-full text-4xl font-bold bg-transparent border-b-2 border-gray-200 dark:border-gray-700 focus:border-teal-500 outline-none py-2 text-center text-gray-900 dark:text-white" 
+                  autoFocus 
+                />
                   <span className="absolute right-0 bottom-4 text-xs font-bold text-gray-400">VND</span>
               </div>
               <div className="grid grid-cols-4 gap-3 mb-6">
@@ -627,7 +633,14 @@ const App = () => {
                 </div>
               )}
 
-              <input type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Ghi chú (Tùy chọn)" className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-xl px-4 py-3 mb-4 focus:ring-2 focus:ring-teal-500 outline-none" />
+              {/* SỬA LỖI MÀU CHỮ GHI CHÚ */}
+              <input 
+                type="text" 
+                value={note} 
+                onChange={(e) => setNote(e.target.value)} 
+                placeholder="Ghi chú (Tùy chọn)" 
+                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-xl px-4 py-3 mb-4 focus:ring-2 focus:ring-teal-500 outline-none text-gray-900 dark:text-white placeholder-gray-400" 
+              />
               <button onClick={handleAddTransaction} disabled={!amount} className="w-full bg-teal-600 text-white py-4 rounded-xl font-bold hover:bg-teal-700 disabled:opacity-50 transition shadow-lg shadow-teal-500/30">Lưu</button>
             </div>
           </div>
